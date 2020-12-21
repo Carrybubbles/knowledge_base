@@ -1,2 +1,5 @@
-# knowledge_base
-Диплом 2.0
+# Knowledge base!
+
+## Build & Run
+   docker-compose up --build
+

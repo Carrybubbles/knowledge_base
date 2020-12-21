@@ -1,0 +1,37 @@
+version: '3.7'
+
+services:
+  web:
+    build:
+      context: services/web
+      dockerfile: Dockerfile.web
+    command: gunicorn --bind 0.0.0.0:5000 manage:app
+    expose:
+      - 5000
+    env_file:
+      - .env.prod
+    depends_on:
+      - h2o
+#      - db
+  nginx:
+    build:
+      context: services/nginx
+      dockerfile: Dockerfile.nginx
+    ports:
+      - 1337:80
+    depends_on:
+      - web
+  h2o:
+    build:
+      context: services/h2o
+      dockerfile: Dockerfile.h2o
+    command: java -jar h2o.jar
+    expose:
+      - 54321
+#  db:
+#    image: mongo
+#    restart: always
+#    env_file:
+#      - .env.prod.db
+#    volumes:
+#      - mongo_data:/var/lib/mongo/data/

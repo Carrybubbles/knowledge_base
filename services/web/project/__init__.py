@@ -3,13 +3,15 @@ from h2o import h2o
 from h2o.estimators import H2OGeneralizedLinearEstimator
 
 app = Flask(__name__)
-h2o.init()
+h2o.connect(ip="h2o", port=54321)
+
 
 @app.route('/ok')
 def health():
     return "Hello, World!"
 
-@app.route('/model', methods = ['POST', 'GET'])
+
+@app.route('/model', methods=['POST', 'GET'])
 def model():
     if request.method == 'GET':
         return str(h2o.models())

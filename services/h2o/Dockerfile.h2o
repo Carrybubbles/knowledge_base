@@ -1,0 +1,4 @@
+FROM openjdk:14
+COPY . /home/app/h2o
+WORKDIR /home/app/h2o
+CMD ["java", "-jar", "h2o.jar"]
