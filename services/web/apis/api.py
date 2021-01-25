@@ -9,7 +9,7 @@ from services.dbManager import dbManager
 from services.H2oManager import h2oManager
 from services.H2oManager import Model
 
-h2o.init()
+# h2o.init()
 
 
 @app.route('/ok')
@@ -26,10 +26,12 @@ def model(model_name):
             resp.status_code = 200
             return resp
         else:
-            return ('{}', 200)
+            resp = jsonify({'message': 'Error. Model with this name doesn\'t consist in knowledge base'})
+            resp.status_code = 500
+            return resp
     elif request.method == 'POST':
         if dbManager.model_exist(model_name):
-            resp = jsonify({'message': 'Error model_name'})
+            resp = jsonify({'message': 'Error. Model with this name already exist.'})
             resp.status_code = 500
             return resp
         content = json.loads(request.json)
@@ -76,8 +78,11 @@ def upload_file():
 
 @app.route('/models', methods=['GET'])
 def models():
-    models = h2oManager.get_all_models()
-    resp = jsonify(models)
+    models = dbManager.get_models()
+    result = []
+    for cur_model in models:
+        result.append(cur_model.as_dict())
+    resp = jsonify(result)
     resp.status_code = 200
     return resp
 
