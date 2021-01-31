@@ -8,13 +8,17 @@ class AIModel(db.Model):
     __tablename__ = 'models'
     id = db.Column(db.Integer, primary_key=True)
     model_name = db.Column(db.String())
+    uuid = db.Column(db.String())
+    description = db.Column(db.String())
     x = db.Column(db.ARRAY(db.String()))
     y = db.Column(db.String())
 
-    def __init__(self, model_name, x, y):
+    def __init__(self, model_name, x, y, uuid, description):
         self.model_name = model_name
         self.x, = x,
-        self.y = y
+        self.y = y,
+        self.uuid = uuid,
+        self.description = description
 
     def as_dict(self):
         return {c.name: getattr(self, c.name) for c in self.__table__.columns}

@@ -1,0 +1,21 @@
+Upload file-model to knwoledge base
+---
+tags:
+  - model
+parameters:
+  - name: file
+    in: formData
+    description: The uploaded file data
+    required: true
+    type: file
+definitions:
+  - Uuid:
+      type: string
+      example: 123e4567-e89b-12d3-a456-426614174000
+responses:
+  200:
+    description: Ok
+    schema:
+      $ref: '#/definitions/Uuid'
+  500:
+    description: Internal server error

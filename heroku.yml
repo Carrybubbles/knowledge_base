@@ -1,3 +1,0 @@
-build:
-  docker:
-    web: Dockerfile.h2o.web.nginx

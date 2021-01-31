@@ -1,0 +1,15 @@
+Delete model by uuid
+  ---
+tags:
+  - model
+parameters:
+  - name: uuid
+    in: path
+    type: string
+    required: true
+    default: bd65600d-8669-4903-8a14-af88203add38
+responses:
+  200:
+    description:  Ok
+  500:
+    description: Internal server error

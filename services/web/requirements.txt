@@ -3,3 +3,4 @@ h2o==3.32.0.2
 gunicorn==19.10.0
 flask-sqlalchemy
 SQLAlchemy-serializer
+flasgger

@@ -1,0 +1,37 @@
+Get all models from knowledge base
+  ---
+tags:
+  - model
+definitions:
+  Model:
+    type: object
+    properties:
+      uuid:
+        type: string
+        example: 123e4567-e89b-12d3-a456-426614174000
+      description:
+        type: string
+        example: my_model is the best
+      model_name:
+        type: string
+        exmaple: my_model
+      x:
+        type: array
+        items:
+          type: string
+      example: [feature1, feature2]
+      y:
+        type: string
+        example: result
+  Models:
+    type: array
+    items:
+      ref: '#/definitions/Model'
+    example: []
+responses:
+  200:
+    description: Ok
+    schema:
+      $ref: '#/definitions/Models'
+  500:
+    description: Internal server error
