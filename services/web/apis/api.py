@@ -1,9 +1,8 @@
 import os
 import pathlib
 
-import uuid as uuid
-from app import app
 import uuid
+from app import app
 from flasgger import swag_from
 from flask import request, json, jsonify
 from h2o import h2o
@@ -12,14 +11,13 @@ from services.dbManager import dbManager
 from services.H2oManager import h2oManager
 from services.H2oManager import Model
 
+h2o.connect(ip=os.environ.get('H2O_ADDRESS'), port=os.environ.get('H2O_PORT'))
 
-# h2o.init()
-
-@app.route('/model/<model_name>/', methods=['GET'])
+@app.route('/model/<uuid>/', methods=['GET'])
 @swag_from('../openapi/get_model.yml')
-def get_model(model_name):
+def get_model(uuid):
     try:
-        model = dbManager.get_model(model_name)
+        model = dbManager.get_model(uuid)
         if model is not None:
             resp = jsonify(model.as_dict())
             resp.status_code = 200
@@ -36,9 +34,10 @@ def get_model(model_name):
 
 @app.route('/model', methods=['POST'])
 @swag_from('../openapi/post_model.yml')
-def post_model(model_name):
+def post_model():
     try:
-        content = json.loads(request.json)
+        content = json.dumps(request.json)
+        content = json.loads(content)
         uuid = content["uuid"]
         if dbManager.model_exist(uuid):
             resp = jsonify({'message': 'Forbidden. Model with this guid already exist'})
@@ -46,7 +45,7 @@ def post_model(model_name):
             return resp
         x = content["x"]
         y = content["y"]
-        desc = content["desc"]
+        desc = content["description"]
         model_name = content["model_name"]
         dbManager.insert_model(model_name=model_name, x=x, y=y, desc=desc, uuid=uuid)
         resp = jsonify({'message': 'Ok'})
@@ -58,14 +57,14 @@ def post_model(model_name):
         return resp
 
 
-@app.route('/model/<model_name>/', methods=['DELETE'])
+@app.route('/model/<uuid>/', methods=['DELETE'])
 @swag_from('../openapi/delete_model.yml')
-def delete_model(model_name):
+def delete_model(uuid):
     try:
-        path = os.path.join(pathlib.Path(__file__).parent.parent.absolute(), 'files')
-        model_file = os.path.join(path, model_name)
+        path = os.environ.get('MODELS_DIR')
+        model_file = os.path.join(path, uuid)
         os.remove(model_file)
-        dbManager.delete_model(model_name)
+        dbManager.delete_model(uuid)
         resp = jsonify({'message': 'Ok'})
         resp.status_code = 200
         return resp
@@ -89,12 +88,11 @@ def upload_file():
             resp.status_code = 400
             return resp
         if file:
-            filename = secure_filename(file.filename)
-            path = os.path.join(pathlib.Path(__file__).parent.parent.absolute(), 'files')
-            uuid = uuid.uuid4()
-            filename = filename + '_' + str(uuid)
+            path = os.environ.get('MODELS_DIR')
+            id = str(uuid.uuid4())
+            filename = id
             file.save(os.path.join(path, filename))
-            resp = jsonify({'uuid': uuid})
+            resp = jsonify({'uuid': id})
             resp.status_code = 200
             return resp
     except:
@@ -115,12 +113,14 @@ def models():
     return resp
 
 
-@app.route('/predict/<model_name>', methods=['GET'])
-def predict_model(model_name):
-    content = json.loads(request.json)
-    x = content['x']
-    column_names = content['column_names']
-    model = Model(x, column_names, model_name)
+@app.route('/predict/<uuid>', methods=['POST'])
+@swag_from('../openapi/post_predict.yml')
+def predict_model(uuid):
+    content = json.dumps(request.json)
+    content = json.loads(content)
+    x = content['x_values']
+    column_names = content['x_names']
+    model = Model(x, column_names, uuid)
     result = h2oManager.predict(model)
     value = result.as_data_frame()[1]
     resp = jsonify({'predict': value})

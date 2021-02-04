@@ -1,0 +1,38 @@
+Search model by uuid
+  ---
+tags:
+  - model
+parameters:
+  - name: uuid
+    in: path
+    type: string
+    required: true
+    default: 123e4567-e89b-12d3-a456-426614174000
+  - name: params
+    in: body
+    schema:
+      $ref: '#/definitions/PredictParams'
+definitions:
+  Predict:
+    type: string
+    example: 0.45
+  PredictParams:
+    type: object
+    properties:
+      x_names:
+        type: array
+        items:
+          type: string
+        example: [ feature1, feature2 ]
+      x_values:
+        type: array
+        items:
+          type: string
+        example: [ 1, 2 ]
+responses:
+  200:
+    description: Ok
+    schema:
+      $ref: '#/definitions/Predict'
+  500:
+    description: Internal server error

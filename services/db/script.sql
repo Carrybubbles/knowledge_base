@@ -1,10 +1,10 @@
-CREATE SCHEMA knowsledge_base;
+CREATE SCHEMA knowledge_base;
 
-CREATE TABLE knowsledge_base.accounts (
+CREATE TABLE model (
 	id serial PRIMARY KEY,
-	model_name VARCHAR (256) UNIQUE NOT NULL,
+	model_name VARCHAR (256) NOT NULL,
 	uuid VARCHAR (256) UNIQUE NOT NULL,
 	description TEXT,
-	x VARCHAR (256) [],
+	x VARCHAR (256) [] NOT NULL,
 	y VARCHAR (256) NOT NULL
 );

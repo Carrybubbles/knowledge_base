@@ -19,7 +19,7 @@ definitions:
         example: my_model is the best
       model_name:
         type: string
-        exmaple: my_model
+        example: my_model
       x:
         type: array
         items:

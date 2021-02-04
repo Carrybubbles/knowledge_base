@@ -5,7 +5,7 @@ Base = declarative_base()
 
 class AIModel(db.Model):
 
-    __tablename__ = 'models'
+    __tablename__ = 'model'
     id = db.Column(db.Integer, primary_key=True)
     model_name = db.Column(db.String())
     uuid = db.Column(db.String())
