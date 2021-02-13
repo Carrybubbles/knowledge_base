@@ -4,4 +4,5 @@ gunicorn==19.10.0
 flask-sqlalchemy
 SQLAlchemy-serializer
 flasgger
+psycopg2
 python-dotenv
