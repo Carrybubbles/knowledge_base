@@ -5,9 +5,9 @@ from app import app
 from flasgger import swag_from
 from flask import request, json, jsonify
 from h2o import h2o
-from services.dbManager import dbManager
-from services.H2oManager import h2oManager
-from services.H2oManager import Model
+from web.services.dbManager import dbManager
+from web.services.H2oManager import h2oManager
+from web.services.H2oManager import Model
 
 @app.route('/model/<uuid>/', methods=['GET'])
 @swag_from('../openapi/get_model.yml')

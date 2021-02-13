@@ -20,5 +20,5 @@ db = SQLAlchemy(app)
 
 h2o.init()
 
-import apis
-import models
+import web.apis
+import web.models

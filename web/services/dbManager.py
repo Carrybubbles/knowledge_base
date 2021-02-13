@@ -1,5 +1,5 @@
 from app import app, db
-from models.AIModel import AIModel
+from web.models.AIModel import AIModel
 
 class DbManager:
 
