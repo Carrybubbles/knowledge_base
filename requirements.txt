@@ -4,6 +4,4 @@ gunicorn==19.10.0
 flask-sqlalchemy
 SQLAlchemy-serializer
 flasgger
-gevent
-auto-py-to-exe
-dotenv
+python-dotenv
