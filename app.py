@@ -9,7 +9,7 @@ import os
 from dotenv import load_dotenv
 from h2o import h2o
 
-load_dotenv(os.path.join(pathlib.Path(__file__).parent.parent.absolute(), 'web/.env'))
+load_dotenv(os.path.join(pathlib.Path(__file__).parent.parent.absolute(), '.env'))
 
 locale.setlocale(locale.LC_TIME, locale.getlocale())
 
