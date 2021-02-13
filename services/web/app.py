@@ -18,5 +18,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
 swagger = Swagger(app)
 db = SQLAlchemy(app)
 
+h2o.init()
+
 import apis
 import models

@@ -3,6 +3,11 @@ Insert model by uuid
 tags:
   - model
 parameters:
+  - name: uuid
+    in: path
+    type: string
+    required: true
+    default: 123e4567-e89b-12d3-a456-426614174000
   - name: model
     in: body
     schema:
@@ -11,15 +16,9 @@ definitions:
   Model:
     type: object
     properties:
-      uuid:
-        type: string
-        example: 123e4567-e89b-12d3-a456-426614174000
       description:
         type: string
         example: my_model is the best
-      model_name:
-        type: string
-        example: my_model
       x:
         type: array
         items:
@@ -28,10 +27,21 @@ definitions:
       y:
         type: string
         example: result
+      category:
+        type: string
+        example: tree
+      metrics:
+        type: object
+        properties:
+          code:
+            type: string
+          text:
+            type: string
+        example:
+          mae: 0.45
+          mse: 0.234
 responses:
   200:
     description: Ok
-  403:
-    description: Forbidden. Model with this guid already exist
   500:
     description: Internal server error

@@ -1,5 +1,4 @@
 import os
-import pathlib
 from h2o import h2o
 
 

@@ -1,17 +1,13 @@
 import os
-import pathlib
 
 import uuid
 from app import app
 from flasgger import swag_from
 from flask import request, json, jsonify
 from h2o import h2o
-from werkzeug.utils import secure_filename
 from services.dbManager import dbManager
 from services.H2oManager import h2oManager
 from services.H2oManager import Model
-
-h2o.connect(ip=os.environ.get('H2O_ADDRESS'), port=os.environ.get('H2O_PORT'))
 
 @app.route('/model/<uuid>/', methods=['GET'])
 @swag_from('../openapi/get_model.yml')
@@ -32,22 +28,18 @@ def get_model(uuid):
         return resp
 
 
-@app.route('/model', methods=['POST'])
-@swag_from('../openapi/post_model.yml')
-def post_model():
+@app.route('/model/<uuid>/', methods=['PUT'])
+@swag_from('../openapi/put_model.yml')
+def put_model(uuid):
     try:
         content = json.dumps(request.json)
         content = json.loads(content)
-        uuid = content["uuid"]
-        if dbManager.model_exist(uuid):
-            resp = jsonify({'message': 'Forbidden. Model with this guid already exist'})
-            resp.status_code = 403
-            return resp
+        metrics = content["metrics"]
         x = content["x"]
         y = content["y"]
         desc = content["description"]
-        model_name = content["model_name"]
-        dbManager.insert_model(model_name=model_name, x=x, y=y, desc=desc, uuid=uuid)
+        category = content["category"]
+        dbManager.update_model(category=category, metrics=metrics, x=x, y=y, description=desc, uuid=uuid)
         resp = jsonify({'message': 'Ok'})
         resp.status_code = 200
         return resp
@@ -61,9 +53,6 @@ def post_model():
 @swag_from('../openapi/delete_model.yml')
 def delete_model(uuid):
     try:
-        path = os.environ.get('MODELS_DIR')
-        model_file = os.path.join(path, uuid)
-        os.remove(model_file)
         dbManager.delete_model(uuid)
         resp = jsonify({'message': 'Ok'})
         resp.status_code = 200
@@ -88,10 +77,8 @@ def upload_file():
             resp.status_code = 400
             return resp
         if file:
-            path = os.environ.get('MODELS_DIR')
             id = str(uuid.uuid4())
-            filename = id
-            file.save(os.path.join(path, filename))
+            dbManager.insert_model(uuid=id, file=file.read())
             resp = jsonify({'uuid': id})
             resp.status_code = 200
             return resp
@@ -107,6 +94,9 @@ def models():
     models = dbManager.get_models()
     result = []
     for cur_model in models:
+        cur_model.id = None
+        cur_model.file = None
+        cur_model.uuid = None
         result.append(cur_model.as_dict())
     resp = jsonify(result)
     resp.status_code = 200
@@ -127,7 +117,3 @@ def predict_model(uuid):
     resp.status_code = 200
     return resp
 
-
-@app.route('/predicts', methods=['POST'])
-def predict_models():
-    return "ok"
