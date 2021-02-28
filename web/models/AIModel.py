@@ -81,7 +81,6 @@ class BaseSchema(Schema):
         }
 
 class AIModelSchema(BaseSchema):
-    id = fields.Integer()
     category = fields.String()
     uuid = fields.String()
     author = fields.String()

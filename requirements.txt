@@ -1,5 +1,5 @@
 Flask==1.1.2
-h2o
+h2o==3.32.0.4
 gunicorn==19.10.0
 flask-sqlalchemy
 SQLAlchemy-serializer
