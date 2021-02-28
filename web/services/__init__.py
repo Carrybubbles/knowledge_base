@@ -1,5 +1,5 @@
-import os
 import importlib
+import os
 
 module_path = os.path.dirname(os.path.abspath(__file__))
 services = [f for f in os.listdir(module_path) if f.endswith(".py") and f != "__init__.py"]

@@ -6,3 +6,5 @@ SQLAlchemy-serializer
 flasgger
 psycopg2
 python-dotenv
+flask-filter
+marshmallow

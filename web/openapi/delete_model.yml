@@ -8,8 +8,13 @@ parameters:
     type: string
     required: true
     default: bd65600d-8669-4903-8a14-af88203add38
+  - name: key-for-delete
+    in: header
+    type: string
 responses:
   200:
-    description:  Ok
+    description: Ok
   500:
     description: Internal server error
+  403:
+    description: You have no permission for this operation

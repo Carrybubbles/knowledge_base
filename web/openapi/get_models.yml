@@ -2,7 +2,38 @@ Get all models from knowledge base
   ---
 tags:
   - model
+parameters:
+  - name: params
+    in: body
+    schema:
+      $ref: '#/definitions/Filters'
 definitions:
+  Filters:
+    type: object
+    properties:
+      filters:
+        type: array
+        items:
+          $ref: '#/definitions/Filter'
+        example:
+          - field: category
+            op: '='
+            value: tree
+          - field: author
+            op: like
+            value: bob
+  Filter:
+    type: object
+    properties:
+      field:
+        type: String
+        example: category
+      op:
+        type: String
+        example: '='
+      value:
+        type: string
+        example: tree
   Model:
     type: object
     properties:
@@ -12,22 +43,57 @@ definitions:
       description:
         type: string
         example: my_model is the best
-      model_name:
-        type: string
-        exmaple: my_model
       x:
         type: array
         items:
           type: string
-      example: [feature1, feature2]
+        example: [feature1, feature2]
       y:
         type: string
         example: result
+      author:
+        type: string
+        example: artem
+      hash_data_test:
+        type: string
+        example: c768281a74788083a3f78dd02364aafbb89049d9
+      hash_data_train:
+        type: string
+        example: c768281a74788083a3f78dd02364aafbb89049d9
+      task_type:
+        type: string
+        enum: [regression, classbinary, classmulticlass]
+        example: regression
+      category:
+        type: string
+        example: tree
+      metrics:
+        type: object
+        properties:
+          mse:
+            type: number
+            example: 0.7
+          rmse:
+            type: number
+            example: 0.7
+          r2:
+            type: number
+            example: 0.7
+          additional:
+            type: object
+            properties:
+              code:
+                type: string
+              text:
+                type: string
+            example:
+              key1: 0.45
+              key2: 0.234
   Models:
     type: array
     items:
       ref: '#/definitions/Model'
-    example: []
+    example: [ ]
 responses:
   200:
     description: Ok

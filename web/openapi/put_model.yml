@@ -23,25 +23,52 @@ definitions:
         type: array
         items:
           type: string
-        example: [feature1, feature2]
+        example: [ feature1, feature2 ]
       y:
         type: string
         example: result
+      author:
+        type: string
+        example: artem
+      hash_data_test:
+        type: string
+        example: c768281a74788083a3f78dd02364aafbb89049d9
+      hash_data_train:
+        type: string
+        example: c768281a74788083a3f78dd02364aafbb89049d9
+      task_type:
+        type: string
+        enum: [regression, classbinary, classmulticlass]
+        example: regression
       category:
         type: string
         example: tree
       metrics:
         type: object
         properties:
-          code:
-            type: string
-          text:
-            type: string
-        example:
-          mae: 0.45
-          mse: 0.234
+          mse:
+            type: number
+            example: 0.7
+          rmse:
+            type: number
+            example: 0.7
+          r2:
+            type: number
+            example: 0.7
+          additional:
+            type: object
+            properties:
+              code:
+                type: string
+              text:
+                type: string
+            example:
+              key1: 0.45
+              key2: 0.234
 responses:
   200:
     description: Ok
   500:
     description: Internal server error
+  400:
+    description: select following task_type regression, classbinary, classmulticlass
