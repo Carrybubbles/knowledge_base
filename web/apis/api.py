@@ -46,6 +46,10 @@ def put_model(uuid):
         y = content["y"]
         desc = content["description"]
         category = content["category"]
+        if category not in ["m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9"]:
+            resp = jsonify({'message': 'select following category: m1, m2, m3, m4, m5, m6, m7, m8, m9'})
+            resp.status_code = 400
+            return resp
         author = content["author"]
         hash_data_train = content["hash_data_train"]
         hash_data_test = content["hash_data_test"]
@@ -54,11 +58,21 @@ def put_model(uuid):
         mse = metrics["mse"]
         rmse = metrics["rmse"]
         additional = metrics["additional"]
+        variant = metrics["variant"]
+        task = metrics["task"]
+        filename = metrics["filename"]
+        is_full_to_train = metrics["is_full_to_train"]
+        maxf1 = metrics["maxf1"]
         dbManager.update_model(category=category,
                                author=author,
                                x=x,
                                y=y,
                                description=desc,
+                               variant=variant,
+                               task=task,
+                               filename=filename,
+                               is_full_to_train=is_full_to_train,
+                               maxf1=maxf1,
                                uuid=uuid,
                                hash_data_test=hash_data_test,
                                hash_data_train=hash_data_train,
@@ -125,14 +139,16 @@ def upload_file():
         resp.status_code = 500
         return resp
 
+
 @app.route('/models', methods=['POST'])
 @swag_from('../openapi/get_models.yml')
 def models():
     try:
         query = filtr.search(AIModel, request.json.get("filters"), AIModelSchema)
+        result = [model for model in query if model.author is not None]
         if query is not None:
             aiModelSchema = AIModelSchema()
-            data = aiModelSchema.dumps(query, many=True)
+            data = aiModelSchema.dumps(result, many=True)
             resp = jsonify()
             resp.data = data
             resp.status_code = 200
@@ -156,12 +172,14 @@ def predict_model(uuid):
         requestModel = RequestModel(x, column_names)
         model = dbManager.get_model(uuid, True)
         result = h2oManager.predict(requestModel, model)
-        value = result.as_data_frame()[1]
-        resp = jsonify({'predict': value})
+        headers = result.as_data_frame()[0]
+        prediction = result.as_data_frame()[1]
+        data = dict(zip(headers, prediction))
+        resp = jsonify()
+        resp.data = json.dumps(data)
         resp.status_code = 200
         return resp
     except:
         resp = jsonify({'message': 'Internal server error'})
         resp.status_code = 500
         return resp
-

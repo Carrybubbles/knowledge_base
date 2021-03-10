@@ -22,7 +22,7 @@ swagger = Swagger(app)
 db = SQLAlchemy(app)
 filtr.init_app(app)
 
-h2o.init()
+h2o.connect(ip='192.168.0.167', port=54323)
 
 import web.apis
 import web.models

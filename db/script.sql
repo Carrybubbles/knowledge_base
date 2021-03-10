@@ -5,7 +5,12 @@ CREATE TABLE model (
 	uuid VARCHAR (256) UNIQUE NOT NULL,
 	category VARCHAR (256),
 	author VARCHAR (256),
-	updated date,
+	creation_time timestamp,
+	variant int,
+	task VARCHAR (256),
+	filename VARCHAR (256),
+	is_full_to_train boolean,
+	updated timestamp,
 	hash_data_train VARCHAR(256),
 	hash_data_test VARCHAR(256),
 	task_type VARCHAR(20),
@@ -22,5 +27,6 @@ CREATE TABLE metric(
     r2 numeric,
     mse numeric,
     rmse numeric,
+    maxf1 numeric,
     additional json
 )
